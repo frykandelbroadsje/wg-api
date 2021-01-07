@@ -106,7 +106,7 @@ fastify.get('/peer/create/:username', function(request, reply) {
         profile.qr = "/peer/qr/" + request.params.username
         reply.send(JSON.stringify({ code: 500, error: "Profile already exists", profile }, null, 2))
     } catch (error) {
-        exec('bash ./scripts/bash/wg.sh -a ' + request.params.username, (err, stdout, stderr) => {
+        exec('bash ./scripts/bash/wg.sh -a ' + request.params.username + '-r', (err, stdout, stderr) => {
             var profile = ini.parse(fs.readFileSync('./profiles/' + request.params.username + '/wg0.conf', 'utf-8'))
             profile.qr = "/peer/qr/" + request.params.username
             reply.send(JSON.stringify({ code: 200, profile }, null, 2))
