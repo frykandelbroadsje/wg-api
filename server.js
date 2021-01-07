@@ -90,7 +90,7 @@ fastify.get('/peer/info/:username', function(request, reply) {
     cliMsg(`${request.ip} requested info of peer ${request.params.username}`)
     if (!authAction(request)) return
     try {
-        var profile = ini.parse(fs.readFileSync('./profiles/' + request.params.username + '/wg0.conf', 'utf-8'))
+        var profile = ini.parse(fs.readFileSync('./profiles/' + request.params.username + '-r/wg0.conf', 'utf-8'))
         profile.qr = "/peer/qr/" + request.params.username
         reply.send(JSON.stringify({ code: 200, profile }, null, 2))
     } catch (error) {
@@ -102,12 +102,12 @@ fastify.get('/peer/create/:username', function(request, reply) {
     cliMsg(`${request.ip} requested new peer named ${request.params.username}`)
     if (!authAction(request)) return
     try {
-        var profile = ini.parse(fs.readFileSync('./profiles/' + request.params.username + '/wg0.conf', 'utf-8'))
+        var profile = ini.parse(fs.readFileSync('./profiles/' + request.params.username + '-r/wg0.conf', 'utf-8'))
         profile.qr = "/peer/qr/" + request.params.username
         reply.send(JSON.stringify({ code: 500, error: "Profile already exists", profile }, null, 2))
     } catch (error) {
         exec('bash ./scripts/bash/wg.sh -a ' + request.params.username + '-r', (err, stdout, stderr) => {
-            var profile = ini.parse(fs.readFileSync('./profiles/' + request.params.username + '/wg0.conf', 'utf-8'))
+            var profile = ini.parse(fs.readFileSync('./profiles/' + request.params.username + '-r/wg0.conf', 'utf-8'))
             profile.qr = "/peer/qr/" + request.params.username
             reply.send(JSON.stringify({ code: 200, profile }, null, 2))
         })
